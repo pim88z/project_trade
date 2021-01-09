@@ -34,19 +34,20 @@ for  symbol in symbols:
      os.makedirs(os.path.dirname(filename), exist_ok=True) 
      # All data
      all_data = []
-     for time_period in slices[0:2]:
+     for time_period in slices:
          api_link   = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&' + \
                       f'symbol={symbol}&interval={interval}&slice={time_period}&apikey={api_key}'
          orig       = requests.get(api_link).content
+         # Splitting the byte string into a list
          data       = orig.decode('utf-8').splitlines()
+         # The header of the data
          header     = data[0]
-         #print(data[0])
+         # Data without header
          data       = data[1:]
-         #print(data[0])
+         # Adding data of time period to all data retrieved already
          all_data  += data
-
+     # Insert back header at the beginning of the list
      all_data.insert(0, header)
-     print(all_data)
      with open(filename, "w") as csv_file:
           # Create the writer object with tab delimiter
           writer = csv.writer(csv_file, delimiter = '\t')
