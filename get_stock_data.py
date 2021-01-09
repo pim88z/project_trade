@@ -3,9 +3,13 @@ import requests
 import csv
 import os
 
+# TODO:
+# Add all data in one big file
+
 # Import api_key. (improve)
 with open('./api_key/api_key.json') as json_file:
-     api_key = json.load(json_file["api_key"])
+     api_key = json.load(json_file)["api_key"]
+
 
 # Company symbols
 symbols   = ['AAPL'] #, 'GOOG', 'TSLA', 'MSFT']
@@ -19,10 +23,10 @@ slices = [ 'year1month1', 'year1month2', 'year1month3', 'year1month4', 'year1mon
 
 for symbol in symbols:
     for time_period in slices:
-        api_link   = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&" + \
-                    "symbol={symbol}&interval={interval}&slice={time_period}&apikey={api_key}"
+        api_link   = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&' + \
+                     f'symbol={symbol}&interval={interval}&slice={time_period}&apikey={api_key}'
         data       = requests.get(api_link)
-        filename   = f'./stock_data/{symbol}/{interval}-{time_period}.csv'
+        filename   = f'./stock_data/{symbol}/{interval}.csv' #-{time_period}
         # Create directory if it's non-existent yet.
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'wb') as f:
